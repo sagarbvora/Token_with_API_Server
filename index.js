@@ -2,12 +2,14 @@ const express = require( "express" );
 const bodyParser = require( "body-parser" );
 const cors = require("cors");
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 const config = require("./src/config/database.config")
 mongoose.Promise = global.Promise;
 // const customResponses = require( "./src/middlewares/customResponses" );
 const logger = require( "./src/utilities/logger" );
 const app = express( );
 app.use( bodyParser.json( ) );
+app.use( cookieParser( ) );
 // app.use( customResponses );
 app.use(cors());
 // Connecting to the database
@@ -34,6 +36,7 @@ app.use( ( err, req, res, next ) => { // eslint-disable-line no-unused-vars
         error: "server_error",
     } );
 } );
+
 app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Credentials', true);
     res.header('Access-Control-Allow-Origin',  req.headers.origin);

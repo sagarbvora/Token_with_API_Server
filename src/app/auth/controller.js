@@ -1,4 +1,4 @@
-require('dotenv').config();
+// require('dotenv').config();
 const Users = require('../users/model');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -29,15 +29,17 @@ exports.create = (req, res) => {
 
 //login data
 exports.login = (req, res) => {
-
-    // const userVarify = jwt.verify(token, "mynameissagarvorasdfsjfjjfjsdfsdfsfjffsdfsdkfjf");
+    console.log(res.body)
     Users.findOne({email: req.body.email})
         .then(users => {
             const isMatch = bcrypt.compareSync(req.body.password, users.password);
+            const token = jwt.sign({email: req.body.email}, "secretkey");
+            res.cookie("coockies", token, {
+                expires: new Date(Date.now() + 10000000),
+                httpOnly: true
+            });
             if (isMatch) {
-                const token = jwt.sign({email: req.body.email}, process.env.SECRET_KEY);
                 res.status(200).send({auth:true, token:token});
-                console.log(token)
                 return res.send(users);
             } else {
                 return res.status(500).send({message: "User Field Are Not Correct"});
