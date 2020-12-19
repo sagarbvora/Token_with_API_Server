@@ -1,4 +1,4 @@
-// require('dotenv').config();
+require('dotenv').config();
 const Users = require('../users/model');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -35,7 +35,7 @@ exports.login = (req, res) => {
         .then(users => {
             const isMatch = bcrypt.compareSync(req.body.password, users.password);
             if (isMatch) {
-                const token = jwt.sign({email: req.body.email}, "secretkey");
+                const token = jwt.sign({email: req.body.email}, process.env.SECRET_KEY);
                 res.status(200).send({auth:true, token:token});
                 console.log(token)
                 return res.send(users);
